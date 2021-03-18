@@ -1,13 +1,18 @@
 require("dotenv").config({ path: "./config.env" });
 const express = require("express");
 const app = express();
-const connectDB = require("./config/db");
 const errorHandler = require("./middleware/error");
 
 const mongoose = require('mongoose')
-require('dotenv').config()
+require('dotenv').config();
 
-//connectDB();
+// Connect DB
+const PORT = process.env.PORT || 5000;
+const url = process.env.MONGO_URL;
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: true,
+ })
+.then(() => {console.log("Server up and running!")})
+
 
 app.use(express.json());
 
@@ -23,11 +28,6 @@ app.use("/api/private", require("./routes/private"));
 app.use(errorHandler);
 
 
-const url = process.env.MONGO_URL;
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
-.then(() => {console.log("Server up and running!")})
-
-const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () =>
   console.log(`Sever running on port ${PORT}`)

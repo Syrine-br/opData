@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./PrivateScreen.css";
 
-const PrivateScreen = () => {
+const PrivateScreen = ({history}) => {
   const [error, setError] = useState("");
   const [privateData, setPrivateData] = useState("");
 
   useEffect(() => {
+    if (!localStorage.getItem("authToken"))
+    {history.pushState("/login");}
+
     const fetchPrivateDate = async () => {
       const config = {
         headers: {
@@ -25,12 +28,21 @@ const PrivateScreen = () => {
     };
 
     fetchPrivateDate();
-  }, []);
+  }, [history]);
+const logoutHandler = () => {
+  localStorage.removeItem("authToken");
+  history.push("/login");
+};
+
   return error ? (
     <span className="error-message">{error}</span>
   ) : (
-    <div>{privateData}</div>
+ <>
+    <div style={{background: "green", color:"white"}}>{privateData}</div>
+    <button onClick={logoutHandler}>logout</button>
+    </>
   );
+
 };
 
 export default PrivateScreen;
