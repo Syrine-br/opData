@@ -4,7 +4,10 @@ const app = express();
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/error");
 
-connectDB();
+const mongoose = require('mongoose')
+require('dotenv').config()
+
+//connectDB();
 
 app.use(express.json());
 
@@ -18,6 +21,11 @@ app.use("/api/private", require("./routes/private"));
 
 // Error Handler Middleware
 app.use(errorHandler);
+
+
+const url = process.env.MONGO_URL;
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+.then(() => {console.log("Server up and running!")})
 
 const PORT = process.env.PORT || 5000;
 
